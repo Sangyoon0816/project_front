@@ -1,19 +1,33 @@
-<?php
-$dir = './image/'; //경로 끝에 슬래쉬 반드시 붙이기!!
-$today = date("YmdHis");
-$userid = 'hong';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
+    $username = $_POST['username'];
+    $uphone = $_POST['uphone'];
+    $gender = $_POST['gender'];
+    $brith = $_POST['brith'];
 
-$file_into = pathinfo($_FILES['image']['name']);
-$file_type = $file_into['extension'];
+    // 데이터베이스 연결
+    $dbcon = mysqli_connect('localhost', 'root', '');
+    // 데이터베이스 선택 
+    mysqli_select_db($dbcon, 'student');
 
-$file_name = $today . $userid . '.'.$file_type;
-$imagepath = $dir.$file_name;
-
-move_uploaded_file($_FILES['image']['tmp_name'], $imagepath);
-
-$F_size = $_FILES['image']['size'];
-$result_size = number_format($f_size);
-
-echo "첨부파일: $file_name ($result_size bytes)<br>)";
-echo "<img src = '$imagepath'><br><br>";
-?>
+    // 쿼리 준비 -> 전송
+    $query = "insert into address_book values('$username', '$uphone', '$gender', '$brith')";
+    $result = mysqli_query($dbcon, $query);
+    if($result){
+        echo "$username 님, 가입 신청이 완료";
+    }
+    else{
+        echo "알 수 없는 내용";
+    }
+    // 데이터베이스 연결 해제
+    mysqli_close($dbcon);
+    ?>
+    </body>
+</html>
